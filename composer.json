@@ -1,0 +1,12 @@
+{
+    "name": "tmckenney0/phalcon-rest-demo",
+    "description": "Tutorial 7 of Phalcon PHP Framework. REST Demo.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Tanner Mckenney",
+            "email": "tmckenney@outlook.com"
+        }
+    ],
+    "require": {}
+}
