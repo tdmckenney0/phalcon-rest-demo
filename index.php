@@ -4,6 +4,7 @@ use Phalcon\Loader;
 use Phalcon\Mvc\Micro;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as PdoMysql;
+use Phalcon\Http\Response;
 
 $loader = new Loader();
 
@@ -46,11 +47,44 @@ $app->get('/api/robots', function() use ($app) {
 
 });
 
-$app->get('/api/robots/search/{name}', function($name) {
+$app->get('/api/robots/search/{name}', function($name) use ($app) {
+
+    $phql = "SELECT * FROM Robots WHERE name LIKE :name ORDER BY name";
+    $robots = $app->modelsManager->executeQuery($phql, array('name' => '%' . $name . '%'));
+
+    $data = array();
+
+    foreach($robots as $robot) {
+        $data[] = array(
+            'id' => $robot->id,
+            'name' => $robot->name
+        );
+    }
+
+    echo json_encode($data);
 
 });
 
-$app->get('/api/robots/{id:[0-9]+}', function ($id) {
+$app->get('/api/robots/{id:[0-9]+}', function ($id) use ($app) {
+
+    $phql = "SELECT * FROM Robots WHERE id = :id";
+    $robot = $app->modelsManager->executeQuery($phql, array('id' => $id))->getFirst();
+
+    $response = new Response();
+
+    if($robot == false) {
+        $response->setJsonContent(array('status' => 'NOT-FOUND'));
+    } else {
+        $response->setJsonContent(array(
+            'status' => 'FOUND',
+            'data' => array(
+                'id' => $robot->id,
+                'name' => $robot->name
+            )
+        ));
+    }
+
+    return $response;
 
 });
 
