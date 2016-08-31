@@ -1,7 +1,7 @@
 <?php
 
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\Message;
+use Phalcon\Mvc\Model\Message;
 use Phalcon\Mvc\Model\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Validator\InclusionIn;
 
@@ -9,7 +9,7 @@ class Robots extends Model
 {
     public function validation() 
     {
-        $this->validate(
+        /* $this->validate(
             new InclusionIn(
                 array(
                     "field" => "type",
@@ -29,7 +29,7 @@ class Robots extends Model
                     "message" => "The robot name must be unique"
                 )
             )
-        );
+        ); */
 
         if($this->year < 0) {
             $this->appendMessage(new Message("The year cannot be less than zero"));
