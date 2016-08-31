@@ -2,41 +2,30 @@
 
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Message;
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Validator\InclusionIn;
+use Phalcon\Validation;
+// use Phalcon\Mvc\Model\Validator\Uniqueness as UniquenessValidator;
+// use Phalcon\Mvc\Model\Validator\InclusionIn as InclusionInValidator;
+use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Phalcon\Validation\Validator\InclusionIn as InclusionInValidator;
 
 class Robots extends Model 
 {
     public function validation() 
     {
-        /* $this->validate(
-            new InclusionIn(
-                array(
-                    "field" => "type",
-                    "domain" => array(
-                        "droid",
-                        "mechanical",
-                        "virtual"
-                    )
-                )
+        $validator = new Validation();
+
+        $validator->add('name', new UniquenessValidator(array(
+            "message" => "The robot name must be unique"
+        )));
+
+        $validator->add('type', new InclusionInValidator(array(
+            "domain" => array(
+                "droid",
+                "mechanical",
+                "virtual"
             )
-        );
+        )));
 
-        $this->validate(
-            new Uniqueness(
-                array(
-                    "field" => "name",
-                    "message" => "The robot name must be unique"
-                )
-            )
-        ); */
-
-        if($this->year < 0) {
-            $this->appendMessage(new Message("The year cannot be less than zero"));
-        }
-
-        if($this->validationHasFailed() == true) {
-            return false;
-        }
+        return $this->validate($validator);
     }
 }
